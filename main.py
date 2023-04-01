@@ -10,15 +10,17 @@ import subprocess
 from datetime import datetime
 import pytz
 from discord import Intents
-from dotenv import load_dotenv
+#from dotenv import dotenv_values
 
 os.system("date")
 
 client = discord.Client(intents=Intents.all())
 
-load_dotenv()
-TOKEN = os.environ["TOKEN"]
-CHANNEL_ID = os.environ["CHANNEL_ID"]
+#load_dotenv()
+TOKEN = subprocess.check_output('/usr/bin/cat /home/labpixel/BeginnersSec/discord_bot/.env', shell=True)
+TOKEN = TOKEN.decode("utf-8")
+#TOKEN = os.environ.get["TOKEN"]
+#CHANNEL_ID = os.environ["CHANNEL_ID"]
 
 @client.event
 async def on_ready():
@@ -27,7 +29,7 @@ async def on_ready():
 
 	ctftime_limit = 15
 	ctftime_start = int(time.time())
-	ctftime_finish = ""
+	ctftime_finish = int(time.time() + 86400 * 7)
 
 	url = "https://ctftime.org/api/v1/events/?limit{}=&start={}&finish={}"
 	payload = {"limit": ctftime_limit, "start": ctftime_start, "finish": ctftime_finish}
@@ -73,7 +75,7 @@ async def on_ready():
 		embed.add_field(name = "Start Time(JST)", value = ctf_info["start_jp"], inline = False)
 		embed.add_field(name = "Finish Time(JST)", value= ctf_info["finish_jp"], inline = False)
 		print("[+]	CTF情報を送信しました: " + ctf_info["title"])
-		await client.get_channel(1091694037595062373).send(embed=embed)
+		await client.get_channel(1091753208969445456).send(embed=embed)
 	print("[+]	CTF情報の送信が完了しました")
 	quit()
 
